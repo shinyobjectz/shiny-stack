@@ -1,0 +1,248 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "TOML",
+  "scopeName": "source.toml",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#table"
+    },
+    {
+      "include": "#array-table"
+    },
+    {
+      "include": "#key-value"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.toml",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "table": {
+      "patterns": [
+        {
+          "name": "meta.table.toml",
+          "match": "^\\s*\\[([^\\[\\]]+)\\]\\s*$",
+          "captures": {
+            "0": {
+              "name": "entity.name.section.toml"
+            },
+            "1": {
+              "name": "entity.name.table.toml"
+            }
+          }
+        }
+      ]
+    },
+    "array-table": {
+      "patterns": [
+        {
+          "name": "meta.array-table.toml",
+          "match": "^\\s*\\[\\[([^\\[\\]]+)\\]\\]\\s*$",
+          "captures": {
+            "0": {
+              "name": "entity.name.section.array.toml"
+            },
+            "1": {
+              "name": "entity.name.table.array.toml"
+            }
+          }
+        }
+      ]
+    },
+    "key-value": {
+      "patterns": [
+        {
+          "name": "meta.key-value.toml",
+          "match": "^\\s*([A-Za-z0-9_-]+)\\s*(=)\\s*(.*)$",
+          "captures": {
+            "1": {
+              "name": "variable.other.key.toml"
+            },
+            "2": {
+              "name": "keyword.operator.assignment.toml"
+            },
+            "3": {
+              "patterns": [
+                {
+                  "include": "#value"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "value": {
+      "patterns": [
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#multiline-string"
+        },
+        {
+          "include": "#literal-string"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#boolean"
+        },
+        {
+          "include": "#datetime"
+        },
+        {
+          "include": "#array"
+        },
+        {
+          "include": "#inline-table"
+        }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.toml",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.toml",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "multiline-string": {
+      "patterns": [
+        {
+          "name": "string.quoted.triple.toml",
+          "begin": "\"\"\"",
+          "end": "\"\"\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.toml",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "literal-string": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.toml",
+          "begin": "'",
+          "end": "'",
+          "patterns": []
+        },
+        {
+          "name": "string.quoted.triple.literal.toml",
+          "begin": "'''",
+          "end": "'''",
+          "patterns": []
+        }
+      ]
+    },
+    "number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.toml",
+          "match": "\\b([+-]?[0-9][0-9_]*)\\b"
+        },
+        {
+          "name": "constant.numeric.float.toml",
+          "match": "\\b([+-]?[0-9][0-9_]*\\.[0-9_]+([eE][+-]?[0-9_]+)?)\\b"
+        },
+        {
+          "name": "constant.numeric.hex.toml",
+          "match": "\\b(0x[0-9A-Fa-f][0-9A-Fa-f_]*)\\b"
+        },
+        {
+          "name": "constant.numeric.octal.toml",
+          "match": "\\b(0o[0-7][0-7_]*)\\b"
+        },
+        {
+          "name": "constant.numeric.binary.toml",
+          "match": "\\b(0b[01][01_]*)\\b"
+        },
+        {
+          "name": "constant.numeric.infinity.toml",
+          "match": "\\b([+-]?inf)\\b"
+        },
+        {
+          "name": "constant.numeric.nan.toml",
+          "match": "\\b(nan)\\b"
+        }
+      ]
+    },
+    "boolean": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.toml",
+          "match": "\\b(true|false)\\b"
+        }
+      ]
+    },
+    "datetime": {
+      "patterns": [
+        {
+          "name": "constant.other.datetime.toml",
+          "match": "\\b([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2}))\\b"
+        },
+        {
+          "name": "constant.other.date.toml",
+          "match": "\\b([0-9]{4}-[0-9]{2}-[0-9]{2})\\b"
+        },
+        {
+          "name": "constant.other.time.toml",
+          "match": "\\b([0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?)\\b"
+        }
+      ]
+    },
+    "array": {
+      "patterns": [
+        {
+          "name": "meta.array.toml",
+          "begin": "\\[",
+          "end": "\\]",
+          "patterns": [
+            {
+              "include": "#value"
+            },
+            {
+              "include": "#comments"
+            }
+          ]
+        }
+      ]
+    },
+    "inline-table": {
+      "patterns": [
+        {
+          "name": "meta.inline-table.toml",
+          "begin": "\\{",
+          "end": "\\}",
+          "patterns": [
+            {
+              "include": "#key-value"
+            },
+            {
+              "include": "#comments"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

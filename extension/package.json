@@ -1,0 +1,145 @@
+{
+  "name": "toml-shadcn-forms",
+  "displayName": "TOML → shadcn/ui Forms",
+  "description": "Automatically generate beautiful shadcn/ui forms for editing TOML configuration files",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Other",
+    "Formatters",
+    "Visualization"
+  ],
+  "keywords": [
+    "toml",
+    "shadcn",
+    "forms",
+    "configuration",
+    "ui",
+    "react"
+  ],
+  "activationEvents": [
+    "onLanguage:toml",
+    "onCommand:tomlForms.openEditor"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "toml",
+        "aliases": [
+          "TOML",
+          "toml"
+        ],
+        "extensions": [
+          ".toml",
+          ".config"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "toml",
+        "scopeName": "source.toml",
+        "path": "./syntaxes/toml.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "tomlForms.openEditor",
+        "title": "Open TOML Form Editor",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tomlForms.refreshEditor",
+        "title": "Refresh Form",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "tomlForms.reloadExtension",
+        "title": "🔄 Reload TOML Extension",
+        "icon": "$(debug-restart)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceExtname == .config || resourceExtname == .toml",
+          "command": "tomlForms.openEditor",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "when": "resourceExtname == .config || resourceExtname == .toml",
+          "command": "tomlForms.openEditor",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "TOML Forms",
+      "properties": {
+        "tomlForms.autoOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open form editor when opening .config files"
+        },
+        "tomlForms.theme": {
+          "type": "string",
+          "enum": [
+            "light",
+            "dark",
+            "auto"
+          ],
+          "default": "auto",
+          "description": "Theme for the form editor"
+        },
+        "tomlForms.formWidth": {
+          "type": "string",
+          "enum": [
+            "narrow",
+            "medium",
+            "wide"
+          ],
+          "default": "medium",
+          "description": "Width of the form editor"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "dev": "npm run watch",
+    "dev-update": "node dev-update.js",
+    "dev-update-win": "dev-update.bat",
+    "quick": "npm run compile && npm run package-silent",
+    "dev-f5": "npm run compile && echo ✅ Ready! Press F5 in Cursor to test your changes",
+    "package-silent": "npx @vscode/vsce package --allow-missing-repository --allow-star-activation --no-dependencies",
+    "package-dev": "npx @vscode/vsce package --no-dependencies",
+    "package": "npx @vscode/vsce package",
+    "install-extension": "code --install-extension toml-shadcn-forms-0.1.0.vsix --force",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.84.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^3.6.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "toml": "^3.0.0",
+    "zod": "^3.22.0"
+  }
+}
