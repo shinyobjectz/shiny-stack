@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 4%;
+    --primary: 20 14% 4%;
+    --primary-foreground: 60 9% 98%;
+    --secondary: 60 4% 96%;
+    --secondary-foreground: 24 9% 10%;
+    --muted: 60 4% 96%;
+    --muted-foreground: 25 5% 45%;
+    --accent: 60 4% 96%;
+    --accent-foreground: 24 9% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 9% 98%;
+    --border: 20 5% 90%;
+    --input: 20 5% 90%;
+    --ring: 20 14% 4%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14% 4%;
+    --foreground: 60 9% 98%;
+    --card: 20 14% 4%;
+    --card-foreground: 60 9% 98%;
+    --popover: 20 14% 4%;
+    --popover-foreground: 60 9% 98%;
+    --primary: 60 9% 98%;
+    --primary-foreground: 20 14% 4%;
+    --secondary: 12 6% 15%;
+    --secondary-foreground: 60 9% 98%;
+    --muted: 12 6% 15%;
+    --muted-foreground: 24 5% 64%;
+    --accent: 12 6% 15%;
+    --accent-foreground: 60 9% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 60 9% 98%;
+    --border: 12 6% 15%;
+    --input: 12 6% 15%;
+    --ring: 24 5% 64%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Editor.js Dark Theme */
+.codex-editor {
+  color: rgb(245 245 244) !important;
+}
+
+.ce-paragraph[data-placeholder]:empty::before,
+.ce-header[data-placeholder]:empty::before {
+  color: rgb(168 162 158) !important;
+}
+
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn {
+  color: rgb(245 245 244) !important;
+  background: rgb(68 64 60) !important;
+  border: 1px solid rgb(120 113 108) !important;
+}
+
+.ce-popover {
+  background: rgb(68 64 60) !important;
+  border: 1px solid rgb(120 113 108) !important;
+  color: rgb(245 245 244) !important;
+}

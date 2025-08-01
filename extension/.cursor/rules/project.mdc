@@ -1,0 +1,93 @@
+---
+description: For the @project folder and its structure. 
+alwaysApply: false
+---
+# ShinyStack Project Template
+
+This is the **ShinyStack boilerplate template** that will be installed in users' apps when they use the SuperShiny extension. It provides a complete foundation for building modern full-stack applications with integrated configuration management.
+
+## 🏗️ Architecture Overview
+
+**ShinyStack** is a full-stack application template built with:
+- **Frontend**: React + Vite + TypeScript + Tailwind CSS
+- **Backend**: Convex (serverless database and backend)
+- **Configuration**: SuperShiny TOML-based config system
+- **UI Components**: Radix UI + custom components
+
+## 📁 Project Structure
+
+```
+project/
+├── src/
+│   ├── config/           # SuperShiny configuration files
+│   │   ├── ai.config     # AI/ML configuration
+│   │   ├── architecture.config  # System architecture settings
+│   │   ├── opencode.config      # Open source/code settings
+│   │   ├── styles.config        # UI/UX styling configuration
+│   │   └── glossary.shiny       # Custom definitions and enums
+│   ├── components/       # Reusable UI components
+│   ├── features/         # Feature-specific components
+│   ├── lib/             # Utility functions and helpers
+│   └── App.tsx          # Main application component
+├── convex/              # Convex backend functions
+├── package.json         # Dependencies and scripts
+└── README.md           # Project documentation
+```
+
+## ⚙️ Configuration System
+
+The template uses **SuperShiny's TOML-based configuration system** with the following file types:
+
+### `.config` Files
+- **ai.config**: AI/ML model settings, API keys, prompts
+- **architecture.config**: System architecture, database schemas, API endpoints
+- **opencode.config**: Open source settings, licensing, contribution guidelines
+- **styles.config**: UI themes, colors, typography, component styling
+
+### `.shiny` Files
+- **glossary.shiny**: Custom type definitions, enums, constraints, and string definitions
+- Used for defining reusable configuration patterns and validation rules
+
+## 🚀 Getting Started
+
+1. **Install Dependencies**: `npm install`
+2. **Start Development**: `npm run dev`
+3. **Configure**: Use SuperShiny extension to edit configuration files
+4. **Deploy**: Follow Convex deployment guidelines
+
+## 🔧 Key Features
+
+- **Real-time Configuration**: Edit config files in VSCode with live preview
+- **Type Safety**: Full TypeScript support for configuration schemas
+- **Component Library**: Pre-built UI components with configurable styling
+- **Authentication**: Built-in Convex Auth with anonymous sign-in
+- **Database**: Serverless database with Convex
+- **Deployment**: One-click deployment to production
+
+## 📝 Configuration Guidelines
+
+- Use **TOML format** for all configuration files
+- Organize settings into logical sections with comments
+- Use `.shiny` files for reusable definitions and constraints
+- Follow naming conventions: `kebab-case` for files, `snake_case` for keys
+- Include descriptive comments for all configuration options
+
+## 🎨 Customization
+
+The template is designed to be highly customizable:
+- Modify configuration files to match your project needs
+- Extend the component library with your own components
+- Customize the styling through `styles.config`
+- Add new `.shiny` files for project-specific definitions
+
+## 🔗 Integration
+
+This template integrates seamlessly with:
+- **SuperShiny VSCode Extension**: For configuration editing
+- **Convex Dashboard**: For backend management
+- **Vite Dev Server**: For fast development
+- **Tailwind CSS**: For utility-first styling
+description:
+globs:
+alwaysApply: false
+---

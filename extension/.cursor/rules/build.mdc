@@ -1,0 +1,212 @@
+---
+description: For learning about how this directory builds and installs and runs a dev version and production version of it's VS Code extension.
+alwaysApply: false
+---
+# VS Code Extension Build Rules
+
+## Overview
+This document defines the build process, configuration, and best practices for the SuperShiny VS Code extension.
+
+## Build Architecture
+
+### Components
+- **Extension Host**: TypeScript backend running in VS Code's extension host
+- **Webview**: React frontend running in VS Code's webview context
+- **Build System**: esbuild for bundling both components
+
+### File Structure
+```
+extension/
+├── src/
+│   ├── extension.ts          # Extension entry point
+│   ├── SidebarProvider.ts    # Webview provider
+│   ├── main.tsx             # React app entry point
+│   └── components/          # React components
+├── out/                     # Compiled output
+├── esbuild.config.js        # Build configuration
+└── package.json            # Extension manifest
+```
+
+## Build Process
+
+### 1. Extension Host Build
+- **Entry**: `src/extension.ts`
+- **Output**: `out/extension.js`
+- **Format**: CommonJS (Node.js)
+- **Target**: Node16
+- **External**: `vscode` (provided by VS Code runtime)
+
+### 2. Webview Build
+- **Entry**: `src/main.tsx`
+- **Output**: `out/main.js`
+- **Format**: IIFE (Immediately Invoked Function Expression)
+- **Platform**: Browser
+- **Target**: ES2020
+- **External**: `vscode` (not available in webview context)
+
+### 3. CSS Build
+- **Entry**: `src/styles.css`
+- **Output**: `out/main.css`
+- **Processing**: Tailwind CSS + PostCSS
+
+## Build Configuration
+
+### esbuild.config.js
+```javascript
+// Key configurations:
+- enableScripts: true          // Allow JavaScript in webview
+- localResourceRoots: [extensionUri]  // Restrict resource access
+- define: production: 'true'   // React production mode
+- minify: true                 // Production optimization
+- sourcemap: false             // Disable for security
+```
+
+### Package.json Scripts
+```json
+{
+  "dev": "npm run clean && npm run compile && npm run package && code --install-extension supershiny-1.0.0.vsix",
+  "compile": "npm run clean && node esbuild.config.js",
+  "build": "node esbuild.config.js",
+  "build-react": "node -e \"require('./esbuild.config.js').buildReact()\"",
+  "package": "npm run compile && vsce package --no-dependencies"
+}
+```
+
+### Quick Development Commands
+- **`pnpm run dev`**: Complete development cycle (clean → build → package → install)
+- **`pnpm run compile`**: Build extension only
+- **`pnpm run package`**: Build and package extension
+- **`pnpm run clean`**: Clean build artifacts
+
+## Security Considerations
+
+### Content Security Policy (CSP)
+- **Scripts**: Only allow scripts with specific nonce
+- **Styles**: Only allow styles from webview.cspSource
+- **Resources**: Restricted to extension directory
+
+### Webview Security
+- **Scripts**: Must have nonce attribute
+- **External Resources**: Blocked by default
+- **Message Passing**: Validated message types
+
+## Development Workflow
+
+### 1. Development
+```bash
+pnpm run dev        # Full development cycle: clean, build, package, install
+pnpm run compile    # Build extension only
+pnpm run watch      # Watch for changes (TypeScript only)
+```
+
+### 2. Testing
+```bash
+pnpm run package    # Create VSIX package
+code --install-extension supershiny-1.0.0.vsix
+```
+
+### 3. Publishing
+```bash
+pnpm run vscode:prepublish  # Production build
+vsce publish               # Publish to marketplace
+```
+
+## Common Issues & Solutions
+
+### 1. View Provider Already Registered
+**Problem**: Extension tries to register same view provider twice
+**Solution**: Use singleton pattern in extension.ts
+
+### 2. React Production Error
+**Problem**: `production is not defined`
+**Solution**: Add `production: 'true'` to esbuild defines
+
+### 3. Service Worker Controller Mismatch
+**Problem**: Webview lifecycle issues
+**Solution**: Proper disposal handling and lifecycle events
+
+### 4. Build Failures
+**Problem**: Missing dependencies or configuration
+**Solution**: 
+- Ensure all dependencies installed: `pnpm install`
+- Clean build: `pnpm run clean && pnpm run compile`
+- Check esbuild configuration
+
+## Best Practices
+
+### 1. Extension Development
+- Always use `vscode.window.registerWebviewViewProvider` for sidebar views
+- Implement proper cleanup in `deactivate()` function
+- Use singleton pattern for providers to prevent duplicates
+
+### 2. Webview Development
+- Always acquire VS Code API with error handling
+- Implement proper message passing with type validation
+- Handle webview lifecycle events (dispose, visibility)
+
+### 3. Build Process
+- Use esbuild for fast bundling
+- Separate extension and webview builds
+- Minify production builds
+- Disable sourcemaps for security
+
+### 4. Error Handling
+- Wrap VS Code API calls in try-catch
+- Implement fallback mechanisms for development
+- Log errors appropriately for debugging
+
+## Dependencies
+
+### Core Dependencies
+- `vscode`: VS Code extension API
+- `react`: UI framework for webview
+- `react-dom`: React DOM rendering
+- `esbuild`: Build tool
+
+### Development Dependencies
+- `@types/vscode`: TypeScript definitions
+- `@types/react`: React TypeScript definitions
+- `typescript`: TypeScript compiler
+- `vsce`: VS Code extension packaging
+
+## Environment Variables
+
+### Build Time
+- `NODE_ENV=production`: React production mode
+- `production=true`: Additional production flag
+
+### Runtime
+- `extensionUri`: Extension installation directory
+- `webview.cspSource`: Content security policy source
+
+## Troubleshooting
+
+### Build Issues
+1. Clean and rebuild: `pnpm run clean && pnpm run compile`
+2. Check esbuild configuration
+3. Verify all dependencies installed
+4. Check TypeScript compilation errors
+
+### Runtime Issues
+1. Check extension host logs
+2. Check webview console (F12 in webview)
+3. Verify message passing between extension and webview
+4. Check CSP violations
+
+### Performance Issues
+1. Minimize bundle size with tree shaking
+2. Use lazy loading for large components
+3. Optimize React rendering with proper keys
+4. Monitor memory usage in webview
+
+## Future Improvements
+
+### Potential Enhancements
+- Add webpack for more complex builds
+- Implement hot reload for development
+- Add unit testing framework
+- Implement E2E testing with Playwright
+- Add bundle analysis tools
+- Implement code splitting for large extensions
+alwaysApply: true
+---

@@ -1,212 +1,132 @@
-# TOML → shadcn/ui Forms VSCode Extension
+# SuperShiny - Config Editor Extension
 
-**Transform your TOML configuration files into beautiful, interactive shadcn/ui forms with automatic field detection, validation, and real-time editing.**
-
-Perfect for editing OpenCode config files with a user-friendly interface!
+A Visual Studio Code extension that provides a beautiful, interactive editor for TOML configuration files using modern React components and shadcn/ui.
 
 ## ✨ Features
 
-- 🎨 **Beautiful shadcn/ui inspired forms** - Clean, modern interface that matches VS Code
-- 🧠 **Smart field detection** - Automatically generates appropriate form controls based on data types
-- 🔧 **Custom form layouts** - Special layouts for ai.config, styles.config, and architecture.config
-- 📊 **Interactive components**:
-  - 🎚️ Sliders for temperature and numeric ranges
-  - 🔐 Password fields with show/hide toggle
-  - 📝 Text areas for multi-line content
-  - ☑️ Checkboxes for boolean values
-  - 🎯 Dropdowns for predefined options
-  - 📋 Dynamic arrays with add/remove buttons
-- 💾 **Auto-save** - Saves changes after 5 seconds of inactivity
-- ⌨️ **Keyboard shortcuts** - Ctrl+S to save, Esc to focus save button
-- 🌓 **Theme aware** - Automatically adapts to VS Code light/dark themes
-- ✅ **Form validation** - Real-time validation for URLs, emails, and required fields
+- **TOML Config Parsing** - Automatically parses and displays TOML configuration files
+- **Interactive Forms** - Edit config values with appropriate input types:
+  - Text inputs for strings
+  - Textareas for multi-line strings
+  - Number inputs for numeric values
+  - Switches for boolean values
+  - Array inputs (comma-separated)
+- **Tabbed Interface** - Separate tabs for each config file
+- **Section Headers** - Proper markdown-style headers for sections and subsections
+- **Comments Support** - Displays TOML comments as informational text
+- **Real File Integration** - Loads actual config files from the VSCode workspace
+- **Save Functionality** - Save changes back to files
+- **Modern UI** - Beautiful shadcn-style components with Tailwind CSS
 
-## 🚀 Installation
+## 🚀 Getting Started
 
-### Option 1: From Source (Development)
+### Development Setup
 
-1. **Clone/copy the extension to your development environment**
-2. **Install dependencies:**
+1. **Install Dependencies**
    ```bash
-   cd extension/
-   npm install
+   pnpm install
    ```
 
-3. **Compile the extension:**
+2. **Build the Extension**
    ```bash
-   npm run compile
+   pnpm run compile
    ```
 
-4. **Install in VS Code:**
-   - Press `F5` to open a new VS Code window with the extension loaded
-   - Or package and install: `vsce package` then install the `.vsix` file
+3. **Run in Development Mode**
+   ```bash
+   code --extensionDevelopmentPath=/path/to/extension
+   ```
 
-### Option 2: Package and Install
+### Usage
+
+1. Open a workspace with `.config` files
+2. Click the SuperShiny icon in the activity bar
+3. Edit your config files using the interactive forms
+4. Click "Save" to persist changes
+
+## 🏗️ Architecture
+
+### Components
+
+- **ConfigEditor** - Main component with tabs for different config files
+- **ConfigSection** - Renders sections with proper headers and indentation
+- **ConfigFormField** - Renders different field types based on data type
+- **UI Components** - shadcn-style Button, Input, Textarea, Switch, Tabs, Label
+
+### File Structure
+
+```
+src/
+├── components/
+│   ├── ui/           # shadcn UI components
+│   ├── ConfigEditor.tsx
+│   ├── ConfigSection.tsx
+│   └── ConfigFormField.tsx
+├── utils/
+│   ├── tomlParser.ts # TOML parsing utilities
+│   ├── configLoader.ts # File loading utilities
+│   └── cn.ts        # Class name utilities
+├── types/
+│   └── config.ts    # TypeScript type definitions
+└── main.tsx         # Main React application
+```
+
+## 🎨 Styling
+
+The extension uses Tailwind CSS with custom VSCode theme integration:
+
+- Automatically adapts to VSCode's color scheme
+- Uses VSCode CSS variables for consistent theming
+- Responsive design that works in the sidebar
+- No background colors (following user preferences)
+
+## 🔧 Configuration
+
+The extension automatically detects and loads `.config` files from:
+- Root workspace directory
+- `src/configs/` directory
+- Any subdirectory with `.config` files
+
+## 📝 Supported Config Types
+
+- **AI Configuration** (`ai.config`) - AI models, providers, agents, modes
+- **Architecture Configuration** (`architecture.config`) - Tech stack preferences
+- **OpenCode Configuration** (`opencode.config`) - Main configuration
+- **Styles Configuration** (`styles.config`) - UI theming and preferences
+
+## 🛠️ Development
+
+### Build Commands
 
 ```bash
-cd extension/
-npm install -g vsce
-vsce package
-code --install-extension toml-shadcn-forms-0.1.0.vsix
+# Compile TypeScript and build React
+pnpm run compile
+
+# Watch for changes
+pnpm run watch
+
+# Package extension
+pnpm run package
+
+# Install extension
+pnpm run install-extension
 ```
 
-## 🎯 Usage
+### Adding New Config Types
 
-### Automatic Activation
+1. Add your config file to the workspace
+2. The extension will automatically detect and parse it
+3. Customize field rendering in `ConfigFormField.tsx` if needed
 
-The extension automatically activates when you open `.config` or `.toml` files:
+## 🎯 Key Features
 
-1. **Open any `.config` file** (like `ai.config`, `styles.config`)
-2. **Click the edit icon** in the editor toolbar
-3. **Beautiful form opens** with organized sections and appropriate controls
-
-### Manual Activation
-
-- **Command Palette:** `Ctrl+Shift+P` → "Open TOML Form Editor"
-- **Right-click** any `.config` or `.toml` file → "Open TOML Form Editor"
-
-### Keyboard Shortcuts
-
-- **Ctrl+S / Cmd+S** - Save configuration
-- **Esc** - Focus save button
-- **Tab / Shift+Tab** - Navigate between fields
-
-## 📋 Supported File Types
-
-### Special Layouts
-
-The extension provides custom layouts for:
-
-- **`ai.config`** - AI models, agents, modes, MCP servers
-- **`styles.config`** - Themes, keybindings, UI components
-- **`architecture.config`** - Tech stack, deployment, patterns
-
-### Generic Support
-
-Works with **any TOML file** with automatic field detection:
-- Strings → Text inputs
-- Numbers → Number inputs or sliders
-- Booleans → Checkboxes
-- Arrays → Dynamic lists
-- Objects → Collapsible sections
-
-## 🎨 Field Types & Detection
-
-| Data Type | Generated Component | Auto-Detection |
-|-----------|-------------------|----------------|
-| String | Text Input | Default |
-| String (multiline) | Textarea | Contains `\n` or key contains "prompt"/"description" |
-| String (password) | Password field | Key contains "password"/"secret"/"key" |
-| String (email) | Email input | Key contains "email" |
-| String (URL) | URL input | Key contains "url" or value starts with "http" |
-| String (select) | Dropdown | Key matches known options (theme, provider, etc.) |
-| Number | Number input | Default |
-| Number (slider) | Range slider | Key contains "temperature"/"limit"/"coverage" |
-| Boolean | Checkbox | Default |
-| Array | Dynamic list | Default |
-| Object | Collapsible section | Default |
-
-## ⚙️ Configuration
-
-### Extension Settings
-
-```json
-{
-  "tomlForms.autoOpen": true,           // Auto-open form editor for .config files
-  "tomlForms.theme": "auto",            // Theme: "light", "dark", "auto"
-  "tomlForms.formWidth": "medium"       // Width: "narrow", "medium", "wide"
-}
-```
-
-### Custom Field Options
-
-The extension recognizes these patterns:
-
-- **Sliders:** `temperature`, `limit`, `coverage`
-- **Passwords:** `password`, `secret`, `apiKey`, `key`
-- **Dropdowns:** `theme`, `provider`, `model`, `framework`
-- **URLs:** `url`, `baseURL`, `endpoint`
-- **Textareas:** `prompt`, `description`, multiline strings
-
-## 🔧 Development
-
-### Project Structure
-
-```
-extension/
-├── src/
-│   ├── extension.ts           # Main extension entry point
-│   ├── TomlFormPanel.ts       # Webview panel management
-│   └── TomlFormGenerator.ts   # Form generation logic
-├── media/
-│   ├── main.css              # shadcn/ui inspired styles
-│   └── main.js               # Frontend form interactions
-├── package.json              # Extension manifest
-└── tsconfig.json            # TypeScript configuration
-```
-
-### Building
-
-```bash
-npm run compile    # Compile TypeScript
-npm run watch      # Watch for changes
-npm run lint       # Run ESLint
-npm run test       # Run tests
-```
-
-### Extension API
-
-The extension provides these commands:
-
-- `tomlForms.openEditor` - Open form editor for current file
-- `tomlForms.refreshEditor` - Refresh the form with latest file content
-
-## 🎭 Theming
-
-The extension uses CSS custom properties that automatically adapt to VS Code themes:
-
-```css
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  /* ... more shadcn/ui variables */
-}
-
-[data-vscode-theme-name*="dark"] {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  /* ... dark theme overrides */
-}
-```
-
-## 🐛 Troubleshooting
-
-### Extension Not Loading
-- Check VS Code version (requires 1.84.0+)
-- Run `Developer: Reload Window` command
-
-### Form Not Generating
-- Ensure file has `.config` or `.toml` extension
-- Check VS Code console for errors (Help → Toggle Developer Tools)
-
-### Saving Issues
-- Check file permissions
-- Verify TOML syntax is valid
-
-## 🚀 Perfect for OpenCode Configuration
-
-This extension is **specifically designed** to work with your OpenCode config files:
-
-- **ai.config** → Beautiful forms for AI models, agents, and modes
-- **styles.config** → Easy editing of themes, keybindings, and UI components  
-- **architecture.config** → Intuitive interface for tech stack preferences
-
-Your OpenCode configuration editing just got **10x better**! 🎉
+- **Real-time Parsing** - Changes are parsed and validated immediately
+- **Type Safety** - Full TypeScript support throughout
+- **Accessibility** - Proper ARIA labels and keyboard navigation
+- **Performance** - Efficient rendering with React optimization
+- **Extensibility** - Easy to add new field types and config formats
 
 ## 🤝 Contributing
-
-Want to improve the extension? Here's how:
 
 1. Fork the repository
 2. Create a feature branch
@@ -216,8 +136,4 @@ Want to improve the extension? Here's how:
 
 ## 📄 License
 
-MIT License - feel free to use and modify for your projects!
-
----
-
-**Built with ❤️ for the ShinyObjectz OpenCode configuration system**
+MIT License - see LICENSE file for details
