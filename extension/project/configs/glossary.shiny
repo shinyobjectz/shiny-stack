@@ -1,0 +1,45 @@
+# Glossary Configuration
+# This file contains enums, constraints, and string definitions for the project
+
+[enums]
+# Color themes
+theme_type = ["light", "dark", "auto", "system"]
+
+# Font families
+font_family_options = ["Inter", "Roboto", "Open Sans", "Lato", "Poppins", "Montserrat"]
+
+# Animation types
+animation_type = ["fade", "slide", "scale", "rotate", "bounce"]
+
+[constraints]
+# Numeric constraints
+min_font_size = 8
+max_font_size = 72
+min_opacity = 0.0
+max_opacity = 1.0
+min_scale = 0.1
+max_scale = 3.0
+
+# String constraints
+max_text_length = 1000
+min_password_length = 8
+max_filename_length = 255
+
+[definitions]
+# Common terms
+primary_color = "The main brand color used throughout the application"
+secondary_color = "The secondary color used for accents and highlights"
+accent_color = "The accent color used for call-to-action elements"
+font_family = "The typeface family used for text rendering"
+font_size = "The base font size in pixels"
+line_height = "The line height multiplier for text spacing"
+opacity = "The transparency level from 0 (transparent) to 1 (opaque)"
+scale = "The scaling factor for element sizing"
+animation_duration = "The duration of animations in milliseconds"
+easing_function = "The CSS easing function for animations"
+
+[validation]
+# Validation rules
+email_pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+url_pattern = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+hex_color_pattern = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"

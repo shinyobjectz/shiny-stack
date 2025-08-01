@@ -1,145 +1,114 @@
 {
-  "name": "toml-shadcn-forms",
-  "displayName": "TOML → shadcn/ui Forms",
-  "description": "Automatically generate beautiful shadcn/ui forms for editing TOML configuration files",
-  "version": "0.1.0",
+  "name": "supershiny",
+  "displayName": "SuperShiny",
+  "description": "Interactive TOML configuration editor for VSCode",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shanemurphy/shinyobjectz.git"
+  },
   "engines": {
-    "vscode": "^1.84.0"
+    "vscode": "^1.74.0"
   },
   "categories": [
-    "Other",
-    "Formatters",
-    "Visualization"
-  ],
-  "keywords": [
-    "toml",
-    "shadcn",
-    "forms",
-    "configuration",
-    "ui",
-    "react"
+    "Other"
   ],
   "activationEvents": [
-    "onLanguage:toml",
-    "onCommand:tomlForms.openEditor"
+    "onView:supershiny.sidebar",
+    "onLanguage:shiny"
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "languages": [
-      {
-        "id": "toml",
-        "aliases": [
-          "TOML",
-          "toml"
-        ],
-        "extensions": [
-          ".toml",
-          ".config"
-        ],
-        "configuration": "./language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "toml",
-        "scopeName": "source.toml",
-        "path": "./syntaxes/toml.tmLanguage.json"
-      }
-    ],
-    "commands": [
-      {
-        "command": "tomlForms.openEditor",
-        "title": "Open TOML Form Editor",
-        "icon": "$(edit)"
-      },
-      {
-        "command": "tomlForms.refreshEditor",
-        "title": "Refresh Form",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "tomlForms.reloadExtension",
-        "title": "🔄 Reload TOML Extension",
-        "icon": "$(debug-restart)"
-      }
-    ],
-    "menus": {
-      "editor/title": [
+            "viewsContainers": {
+          "activitybar": [
+            {
+              "id": "supershiny-sidebar",
+              "title": "SuperShiny",
+              "icon": "assets/sparkle.svg"
+            }
+          ]
+        },
+    "views": {
+      "supershiny-sidebar": [
         {
-          "when": "resourceExtname == .config || resourceExtname == .toml",
-          "command": "tomlForms.openEditor",
-          "group": "navigation"
-        }
-      ],
-      "explorer/context": [
-        {
-          "when": "resourceExtname == .config || resourceExtname == .toml",
-          "command": "tomlForms.openEditor",
-          "group": "navigation"
+          "type": "webview",
+          "id": "supershiny.sidebar",
+          "name": "Config Editor"
         }
       ]
     },
+    "languages": [
+      {
+        "id": "shiny",
+        "aliases": ["Shiny", "shiny"],
+        "extensions": [".shiny"],
+        "icon": {
+          "light": "./assets/sparkle.svg",
+          "dark": "./assets/sparkle.svg"
+        },
+        "configuration": "./language-configuration.json"
+      }
+    ],
+
+
     "configuration": {
-      "title": "TOML Forms",
+      "title": "SuperShiny",
       "properties": {
-        "tomlForms.autoOpen": {
-          "type": "boolean",
-          "default": true,
-          "description": "Automatically open form editor when opening .config files"
-        },
-        "tomlForms.theme": {
-          "type": "string",
-          "enum": [
-            "light",
-            "dark",
-            "auto"
-          ],
-          "default": "auto",
-          "description": "Theme for the form editor"
-        },
-        "tomlForms.formWidth": {
-          "type": "string",
-          "enum": [
-            "narrow",
-            "medium",
-            "wide"
-          ],
-          "default": "medium",
-          "description": "Width of the form editor"
+        "files.associations": {
+          "type": "object",
+          "default": {
+            "*.shiny": "toml"
+          },
+          "description": "Associate .shiny files with TOML syntax highlighting"
         }
       }
     }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
+    "compile": "npm run clean && node esbuild.config.js",
     "watch": "tsc -watch -p ./",
-    "dev": "npm run watch",
-    "dev-update": "node dev-update.js",
-    "dev-update-win": "dev-update.bat",
-    "quick": "npm run compile && npm run package-silent",
-    "dev-f5": "npm run compile && echo ✅ Ready! Press F5 in Cursor to test your changes",
-    "package-silent": "npx @vscode/vsce package --allow-missing-repository --allow-star-activation --no-dependencies",
-    "package-dev": "npx @vscode/vsce package --no-dependencies",
-    "package": "npx @vscode/vsce package",
-    "install-extension": "code --install-extension toml-shadcn-forms-0.1.0.vsix --force",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "clean": "rm -rf out",
+    "build": "node esbuild.config.js",
+    "build-react": "node -e \"require('./esbuild.config.js').buildReact()\"",
+    "dev": "npm run clean && npm run compile && npm run package && code --install-extension supershiny-1.0.0.vsix",
+    "package": "npm run compile && vsce package --no-dependencies",
+    "install-extension": "npm run package && code --install-extension supershiny-1.0.0.vsix"
   },
   "devDependencies": {
-    "@types/node": "18.x",
-    "@types/vscode": "^1.84.0",
-    "@typescript-eslint/eslint-plugin": "^6.13.1",
-    "@typescript-eslint/parser": "^6.13.1",
-    "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.8",
-    "@vscode/vsce": "^3.6.0",
-    "eslint": "^8.54.0",
-    "typescript": "^5.3.2"
+    "@types/vscode": "^1.74.0",
+    "@types/node": "^18.15.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "eslint": "^8.38.0",
+    "typescript": "^4.9.5",
+    "vsce": "^2.15.0",
+    "esbuild": "^0.17.0"
   },
   "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "toml": "^3.0.0",
-    "zod": "^3.22.0"
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "@radix-ui/react-label": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.0",
+    "@radix-ui/react-switch": "^1.0.0",
+    "@radix-ui/react-tabs": "^1.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.263.0",
+    "tailwind-merge": "^1.14.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "@types/react": "^18.2.0",
+      "@types/react-dom": "^18.2.0"
+    }
   }
 }
